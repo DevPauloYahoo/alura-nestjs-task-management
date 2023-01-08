@@ -14,10 +14,10 @@ export class TasksService {
 
   findById(id: string): TasksModel | NotFoundException {
     const task = this.tasks.find((task) => task.id === id);
-    if (task) {
-      return task;
+    if (!task) {
+      return new NotFoundException('Tarefa não encontrada');
     }
-    return new NotFoundException('Tarefa não encontrada');
+    return task;
   }
 
   create(createReqTaskDto: CreateReqTaskDto): CreateRespTaskDto {
@@ -31,5 +31,10 @@ export class TasksService {
 
     this.tasks.push(task);
     return task;
+  }
+
+  remove(id: string): void {
+    this.findById(id);
+    this.tasks = this.tasks.filter((task) => task.id !== id);
   }
 }

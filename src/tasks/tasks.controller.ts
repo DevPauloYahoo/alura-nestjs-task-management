@@ -1,4 +1,14 @@
-import { Body, Controller, Get, NotFoundException, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  NotFoundException,
+  Param,
+  Post,
+} from '@nestjs/common';
 
 import { CreateReqTaskDto, CreateRespTaskDto } from './dtos/task-dto';
 import { TasksModel } from './tasks.model';
@@ -21,5 +31,11 @@ export class TasksController {
   @Post()
   createTask(@Body() createReqTaskDto: CreateReqTaskDto): CreateRespTaskDto {
     return this.tasksService.create(createReqTaskDto);
+  }
+
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  removeTaskById(@Param('id') id: string): void {
+    this.tasksService.remove(id);
   }
 }
