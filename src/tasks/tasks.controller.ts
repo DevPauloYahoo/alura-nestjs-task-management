@@ -9,15 +9,26 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 
-import { CreateReqTaskDto, CreateRespTaskDto } from './dtos/task-dto';
+import { CreateReqTaskDto, CreateRespTaskDto, GetTaskFilterDto } from './dtos/task-dto';
 import { TasksModel, TasksStatus } from './tasks.model';
 import { TasksService } from './tasks.service';
 
 @Controller('api/tasks')
 export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
+
+  @Get()
+  getAll(@Query() filterDto: GetTaskFilterDto): TasksModel[] {
+    if (Object.keys(filterDto).length) {
+      console.log('OBJECT FILTER', filterDto);
+      return this.tasksService.getTasksWithFilter(filterDto);
+    } else {
+      return this.tasksService.getAll();
+    }
+  }
 
   @Get()
   getAllTasks(): TasksModel[] {

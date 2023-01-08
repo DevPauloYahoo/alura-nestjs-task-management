@@ -1,15 +1,33 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 
-import { CreateReqTaskDto, CreateRespTaskDto } from './dtos/task-dto';
+import { CreateReqTaskDto, CreateRespTaskDto, GetTaskFilterDto } from './dtos/task-dto';
 import { TasksModel, TasksStatus } from './tasks.model';
 
 @Injectable()
 export class TasksService {
   private tasks: TasksModel[] = [];
 
-  getAll(): TasksModel[] {
-    return this.tasks;
+  getTasksWithFilter(filterDto: GetTaskFilterDto): TasksModel[] {
+    const { status, search } = filterDto;
+
+    console.log('FILTER', filterDto);
+
+    let tasks = this.getAll();
+
+    if (status) {
+      tasks = tasks.filter((task) => task.status === status);
+      console.log('ENTROU NO STATUS');
+    }
+
+    if (search) {
+      console.log('ENTROU NO SEARCH');
+      tasks = tasks.filter((task) => {
+        return task.title.includes(search) || task.description.includes(search);
+      });
+    }
+
+    return tasks;
   }
 
   findById(id: string): TasksModel | NotFoundException {
@@ -18,6 +36,10 @@ export class TasksService {
       return new NotFoundException('Tarefa não encontrada');
     }
     return task;
+  }
+
+  getAll(): TasksModel[] {
+    return this.tasks;
   }
 
   create(createReqTaskDto: CreateReqTaskDto): CreateRespTaskDto {

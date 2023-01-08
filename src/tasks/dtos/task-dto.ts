@@ -11,3 +11,8 @@ export class CreateRespTaskDto {
   description: string;
   status: TasksStatus;
 }
+
+export class GetTaskFilterDto {
+  status?: TasksStatus;
+  search?: string;
+}
