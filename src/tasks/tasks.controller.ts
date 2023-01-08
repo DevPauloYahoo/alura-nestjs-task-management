@@ -7,11 +7,12 @@ import {
   HttpStatus,
   NotFoundException,
   Param,
+  Patch,
   Post,
 } from '@nestjs/common';
 
 import { CreateReqTaskDto, CreateRespTaskDto } from './dtos/task-dto';
-import { TasksModel } from './tasks.model';
+import { TasksModel, TasksStatus } from './tasks.model';
 import { TasksService } from './tasks.service';
 
 @Controller('api/tasks')
@@ -31,6 +32,11 @@ export class TasksController {
   @Post()
   createTask(@Body() createReqTaskDto: CreateReqTaskDto): CreateRespTaskDto {
     return this.tasksService.create(createReqTaskDto);
+  }
+
+  @Patch(':id/status')
+  updateStatusTask(@Param('id') id: string, @Body('status') status: TasksStatus): TasksModel {
+    return this.tasksService.updateStatus(id, status);
   }
 
   @Delete(':id')
