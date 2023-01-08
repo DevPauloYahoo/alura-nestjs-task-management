@@ -26,12 +26,12 @@ export class TasksService {
     return tasks;
   }
 
-  findById(id: string): TasksModel | NotFoundException {
-    const task = this.tasks.find((task) => task.id === id);
-    if (!task) {
-      return new NotFoundException('Tarefa não encontrada');
+  findById(id: string): TasksModel {
+    const taskFound = this.tasks.find((task) => task.id === id);
+    if (!taskFound) {
+      throw new NotFoundException('Tarefa não encontrada');
     }
-    return task;
+    return taskFound;
   }
 
   getAll(): TasksModel[] {
@@ -52,7 +52,7 @@ export class TasksService {
   }
 
   updateStatus(id: string, status: TasksStatus): TasksModel {
-    const task: TasksModel = this.findById(id) as TasksModel;
+    const task: TasksModel = this.findById(id);
     task.status = status;
     return task;
   }

@@ -5,7 +5,6 @@ import {
   Get,
   HttpCode,
   HttpStatus,
-  NotFoundException,
   Param,
   Patch,
   Post,
@@ -35,7 +34,7 @@ export class TasksController {
   }
 
   @Get(':id')
-  getTaskById(@Param('id') id: string): TasksModel | NotFoundException {
+  getTaskById(@Param('id') id: string): TasksModel {
     return this.tasksService.findById(id);
   }
 
