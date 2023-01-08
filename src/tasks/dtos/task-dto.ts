@@ -1,11 +1,11 @@
 import { TasksStatus } from '../tasks.model';
 
-export class TaskDto {
+export class CreateReqTaskDto {
   title: string;
   description: string;
 }
 
-export class ResponseTaskDto {
+export class CreateRespTaskDto {
   id: string;
   title: string;
   description: string;
