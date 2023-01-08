@@ -11,17 +11,13 @@ export class TasksService {
   getTasksWithFilter(filterDto: GetTaskFilterDto): TasksModel[] {
     const { status, search } = filterDto;
 
-    console.log('FILTER', filterDto);
-
     let tasks = this.getAll();
 
     if (status) {
       tasks = tasks.filter((task) => task.status === status);
-      console.log('ENTROU NO STATUS');
     }
 
     if (search) {
-      console.log('ENTROU NO SEARCH');
       tasks = tasks.filter((task) => {
         return task.title.includes(search) || task.description.includes(search);
       });
@@ -57,8 +53,6 @@ export class TasksService {
 
   updateStatus(id: string, status: TasksStatus): TasksModel {
     const task: TasksModel = this.findById(id) as TasksModel;
-    console.log(status);
-    console.log(task.status);
     task.status = status;
     return task;
   }

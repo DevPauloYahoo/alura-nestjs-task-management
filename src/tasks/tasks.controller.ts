@@ -23,7 +23,6 @@ export class TasksController {
   @Get()
   getAll(@Query() filterDto: GetTaskFilterDto): TasksModel[] {
     if (Object.keys(filterDto).length) {
-      console.log('OBJECT FILTER', filterDto);
       return this.tasksService.getTasksWithFilter(filterDto);
     } else {
       return this.tasksService.getAll();
