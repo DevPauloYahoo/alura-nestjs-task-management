@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 
 import { CreateReqTaskDto, CreateRespTaskDto } from './dtos/task-dto';
@@ -8,11 +8,19 @@ import { TasksModel, TasksStatus } from './tasks.model';
 export class TasksService {
   private tasks: TasksModel[] = [];
 
-  getAllTasks(): TasksModel[] {
+  getAll(): TasksModel[] {
     return this.tasks;
   }
 
-  createTask(createReqTaskDto: CreateReqTaskDto): CreateRespTaskDto {
+  findById(id: string): TasksModel | NotFoundException {
+    const task = this.tasks.find((task) => task.id === id);
+    if (task) {
+      return task;
+    }
+    return new NotFoundException('Tarefa não encontrada');
+  }
+
+  create(createReqTaskDto: CreateReqTaskDto): CreateRespTaskDto {
     const { title, description } = createReqTaskDto;
     const task: TasksModel = {
       id: randomUUID(),

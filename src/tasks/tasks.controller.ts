@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, NotFoundException, Param, Post } from '@nestjs/common';
 
 import { CreateReqTaskDto, CreateRespTaskDto } from './dtos/task-dto';
 import { TasksModel } from './tasks.model';
@@ -10,11 +10,16 @@ export class TasksController {
 
   @Get()
   getAllTasks(): TasksModel[] {
-    return this.tasksService.getAllTasks();
+    return this.tasksService.getAll();
+  }
+
+  @Get(':id')
+  getTaskById(@Param('id') id: string): TasksModel | NotFoundException {
+    return this.tasksService.findById(id);
   }
 
   @Post()
   createTask(@Body() createReqTaskDto: CreateReqTaskDto): CreateRespTaskDto {
-    return this.tasksService.createTask(createReqTaskDto);
+    return this.tasksService.create(createReqTaskDto);
   }
 }
