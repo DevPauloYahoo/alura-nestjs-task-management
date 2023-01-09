@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 
-import { CreateReqTaskDto, CreateRespTaskDto, GetTaskFilterDto } from './dtos/task-dto';
+import { GetTaskFilterDto } from './dtos/task-dto';
 import { TasksModel, TasksStatus } from './tasks.model';
 
 @Injectable()
@@ -9,6 +9,7 @@ export class TasksService {
   private tasks: TasksModel[] = [];
 
   getTasksWithFilter(filterDto: GetTaskFilterDto): TasksModel[] {
+    console.log(filterDto);
     const { status, search } = filterDto;
 
     let tasks = this.getAll();
@@ -38,17 +39,16 @@ export class TasksService {
     return this.tasks;
   }
 
-  create(createReqTaskDto: CreateReqTaskDto): CreateRespTaskDto {
-    const { title, description } = createReqTaskDto;
-    const task: TasksModel = {
+  create(title: string, description: string): TasksModel {
+    const newTask: TasksModel = {
       id: randomUUID(),
       title,
       description,
       status: TasksStatus.OPEN,
     };
 
-    this.tasks.push(task);
-    return task;
+    this.tasks.push(newTask);
+    return newTask;
   }
 
   updateStatus(id: string, status: TasksStatus): TasksModel {
