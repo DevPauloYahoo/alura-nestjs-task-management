@@ -1,14 +1,16 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { TaskRepository } from './task.repository';
-import { TasksModel } from './tasks.model';
+import { CreateReqTaskDto } from './dtos/task-dto';
+import { TaskEntity } from './task.entity';
+import { TasksModel, TasksStatus } from './tasks.model';
+import { TasksRepository } from './tasks.repository';
 
 @Injectable()
 export class TasksService {
   constructor(
-    @InjectRepository(TaskRepository)
-    private readonly taskRepository: TaskRepository,
+    @InjectRepository(TaskEntity)
+    private readonly taskRepository: TasksRepository,
   ) {}
 
   // private tasks: TasksModel[] = [];
@@ -37,6 +39,17 @@ export class TasksService {
     } catch (e) {
       throw new NotFoundException(`Tarefa não encontrada para o ID: ${id}`);
     }
+  }
+
+  async create(createReqTaskDto: CreateReqTaskDto): Promise<TasksModel> {
+    const { title, description } = createReqTaskDto;
+    const newTask: TasksModel = this.taskRepository.create({
+      title,
+      description,
+      status: TasksStatus.OPEN,
+    });
+    return await this.taskRepository.save(newTask);
+    // return this.taskRepository.createTask(createReqTaskDto);
   }
 
   //
