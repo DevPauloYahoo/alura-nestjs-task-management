@@ -1,21 +1,23 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { TasksModule } from './tasks/tasks.module';
 
 @Module({
   imports: [
-    TasksModule,
+    ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'localhost',
       port: 5432,
-      username: 'postgres',
-      password: 'postgres',
-      database: 'task-management',
+      username: process.env.BD_USERNAME,
+      password: process.env.BD_PASSWORD,
+      database: process.env.BD_DATABASE,
       autoLoadEntities: true,
       synchronize: true,
     }),
+    TasksModule,
   ],
   controllers: [],
   providers: [],
