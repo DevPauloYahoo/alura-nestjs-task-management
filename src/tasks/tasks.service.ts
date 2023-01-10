@@ -28,6 +28,11 @@ export class TasksService {
   //
   //   return tasks;
   // }
+
+  async findAll(): Promise<TasksModel[]> {
+    return await this.taskRepository.find();
+  }
+
   async findById(id: string): Promise<TasksModel> {
     try {
       return await this.taskRepository.findOneByOrFail({ id });
@@ -36,34 +41,10 @@ export class TasksService {
     }
   }
 
-  async create(createReqTaskDto: CreateReqTaskDto): Promise<TasksModel> {
+  create(createReqTaskDto: CreateReqTaskDto): Promise<TasksModel> {
     return this.taskRepository.createTask(createReqTaskDto);
   }
 
-  //
-  // findById(id: string): TasksModel {
-  //   const taskFound = this.tasks.find((task) => task.id === id);
-  //   if (!taskFound) {
-  //     throw new NotFoundException('Tarefa não encontrada');
-  //   }
-  //   return taskFound;
-  // }
-  //
-  // getAll(): TasksModel[] {
-  //   return this.tasks;
-  // }
-  //
-  // create(title: string, description: string): TasksModel {
-  //   const newTask: TasksModel = {
-  //     id: randomUUID(),
-  //     title,
-  //     description,
-  //     status: TasksStatus.OPEN,
-  //   };
-  //
-  //   this.tasks.push(newTask);
-  //   return newTask;
-  // }
   //
   // updateStatus(id: string, status: TasksStatus): TasksModel {
   //   const task: TasksModel = this.findById(id);
@@ -71,6 +52,14 @@ export class TasksService {
   //   return task;
   // }
   //
+  async remove(id: string): Promise<void> {
+    const result = await this.taskRepository.delete(id);
+
+    if (result.affected === 0) {
+      throw new NotFoundException(`Tarefa não encontrada para o ID: ${id}`);
+    }
+  }
+
   // remove(id: string): void {
   //   this.findById(id);
   //   this.tasks = this.tasks.filter((task) => task.id !== id);

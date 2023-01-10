@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post } from '@nestjs/common';
 
 import { CreateReqTaskDto } from './dtos/task-dto';
 import { TasksModel } from './tasks.model';
@@ -17,10 +17,10 @@ export class TasksController {
   //   }
   // }
 
-  // @Get()
-  // getAllTasks(): TasksModel[] {
-  //   return this.tasksService.getAll();
-  // }
+  @Get()
+  getAllTasks(): Promise<TasksModel[]> {
+    return this.tasksService.findAll();
+  }
 
   @Get(':id')
   getTaskById(@Param('id') id: string): Promise<TasksModel> {
@@ -53,9 +53,9 @@ export class TasksController {
   //   return this.tasksService.updateStatus(id, status);
   // }
   //
-  // @Delete(':id')
-  // @HttpCode(HttpStatus.NO_CONTENT)
-  // removeTaskById(@Param('id') id: string): void {
-  //   this.tasksService.remove(id);
-  // }
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  removeTaskById(@Param('id') id: string): Promise<void> {
+    return this.tasksService.remove(id);
+  }
 }
