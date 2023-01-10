@@ -6,6 +6,7 @@ import { TasksModule } from './tasks/tasks.module';
 
 @Module({
   imports: [
+    TasksModule,
     ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'postgres',
@@ -14,10 +15,10 @@ import { TasksModule } from './tasks/tasks.module';
       username: process.env.BD_USERNAME,
       password: process.env.BD_PASSWORD,
       database: process.env.BD_DATABASE,
+      // entities: [`${__dirname}/**/*.entity{.js,.ts}`],
       autoLoadEntities: true,
       synchronize: true,
     }),
-    TasksModule,
   ],
   controllers: [],
   providers: [],
