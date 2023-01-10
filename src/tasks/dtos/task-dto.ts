@@ -18,7 +18,9 @@ export class CreateRespTaskDto {
 }
 
 export class UpdateTaskStatusDto {
-  @IsEnum(TasksStatus, { message: 'Valor do status inválido ' })
+  @IsEnum(TasksStatus, {
+    message: 'O valor do Status informado é inválido',
+  })
   status: TasksStatus;
 }
 
