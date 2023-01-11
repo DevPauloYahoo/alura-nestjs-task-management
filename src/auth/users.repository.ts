@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 
 import { CreateUserDto } from './dtos';
@@ -16,6 +16,13 @@ export class UsersRepository extends Repository<UserEntity> {
       password,
     });
 
-    await this.save(newUser);
+    try {
+      await this.save(newUser);
+    } catch (err) {
+      if (err.code === '23505') {
+        throw new ConflictException('Nome de usuário já usado em outro cadastro');
+      }
+      throw new InternalServerErrorException(err.message);
+    }
   }
 }
