@@ -2,7 +2,7 @@ import { IsNotEmpty, Length, Matches } from 'class-validator';
 
 const REGEX = /((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/;
 
-export class CreateUserDto {
+export class SignUpRequestDto {
   @IsNotEmpty({
     message: 'Nome do usuário é obrigatório',
   })

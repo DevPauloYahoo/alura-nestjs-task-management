@@ -2,7 +2,7 @@ import { ConflictException, Injectable, InternalServerErrorException } from '@ne
 import { genSaltSync, hashSync } from 'bcrypt';
 import { DataSource, Repository } from 'typeorm';
 
-import { CreateUserDto } from './dtos';
+import { SignUpRequestDto } from './dtos';
 import { UserEntity } from './user.entity';
 
 @Injectable()
@@ -11,7 +11,7 @@ export class UsersRepository extends Repository<UserEntity> {
     super(UserEntity, datasource.createEntityManager());
   }
 
-  async createUser({ username, password }: CreateUserDto): Promise<void> {
+  async createUser({ username, password }: SignUpRequestDto): Promise<void> {
     const salt = genSaltSync(10);
     password = hashSync(password, salt);
 
