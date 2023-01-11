@@ -1,4 +1,5 @@
 import { ConflictException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { genSaltSync, hashSync } from 'bcrypt';
 import { DataSource, Repository } from 'typeorm';
 
 import { CreateUserDto } from './dtos';
@@ -11,6 +12,9 @@ export class UsersRepository extends Repository<UserEntity> {
   }
 
   async createUser({ username, password }: CreateUserDto): Promise<void> {
+    const salt = genSaltSync(10);
+    password = hashSync(password, salt);
+
     const newUser = this.create({
       username,
       password,
