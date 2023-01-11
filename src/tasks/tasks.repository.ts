@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 
-import { CreateReqTaskDto, GetTaskFilterDto } from './dtos/task-dto';
+import { CreateReqTaskDto, GetTaskFilterDto } from './dtos';
 import { TaskEntity } from './task.entity';
 import { TasksModel, TasksStatus } from './tasks.model';
 
@@ -24,7 +24,9 @@ export class TasksRepository extends Repository<TaskEntity> {
     const query = this.createQueryBuilder('task');
 
     if (status) {
-      query.andWhere('task.status = :status', { status });
+      query.andWhere('task.status = :status', {
+        status,
+      });
     }
 
     if (search) {

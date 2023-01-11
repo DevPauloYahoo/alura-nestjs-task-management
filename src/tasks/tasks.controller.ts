@@ -11,7 +11,7 @@ import {
   Query,
 } from '@nestjs/common';
 
-import { CreateReqTaskDto, GetTaskFilterDto, UpdateTaskStatusDto } from './dtos/task-dto';
+import { CreateReqTaskDto, GetTaskFilterDto, UpdateTaskStatusDto } from './dtos';
 import { TasksModel } from './tasks.model';
 import { TasksService } from './tasks.service';
 
