@@ -11,7 +11,7 @@ export class TasksRepository extends Repository<TaskEntity> {
     super(TaskEntity, datasource.createEntityManager());
   }
 
-  async createTask({ title, description }: CreateReqTaskDto): Promise<TaskEntity> {
+  async createTask({ title, description }: CreateReqTaskDto): Promise<TasksModel> {
     const newTask: TasksModel = this.create({
       title,
       description,
