@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 
+import { UserInterface } from '../auth';
 import { CreateReqTaskDto, GetTaskFilterDto } from './dtos';
 import { TasksModel, TasksStatus } from './tasks.model';
 import { TasksRepository } from './tasks.repository';
@@ -20,8 +21,8 @@ export class TasksService {
     }
   }
 
-  create(createReqTaskDto: CreateReqTaskDto): Promise<TasksModel> {
-    return this.taskRepository.createTask(createReqTaskDto);
+  create(createReqTaskDto: CreateReqTaskDto, user: UserInterface): Promise<TasksModel> {
+    return this.taskRepository.createTask(createReqTaskDto, user);
   }
 
   async updateStatus(id: string, status: TasksStatus): Promise<TasksModel> {
