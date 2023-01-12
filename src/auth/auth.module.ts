@@ -19,7 +19,7 @@ import { UsersRepository } from './users.repository';
     JwtModule.register({
       secret: process.env.JWT_SECRET,
       signOptions: {
-        expiresIn: '120s',
+        expiresIn: '300s',
       },
     }),
     TypeOrmModule.forFeature([UserEntity]),
