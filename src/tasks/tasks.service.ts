@@ -9,8 +9,8 @@ import { TasksRepository } from './tasks.repository';
 export class TasksService {
   constructor(private readonly taskRepository: TasksRepository) {}
 
-  getTasks(filterDto: GetTaskFilterDto): Promise<TasksModel[]> {
-    return this.taskRepository.getAllTasks(filterDto);
+  getTasks(filterDto: GetTaskFilterDto, user: UserInterface): Promise<TasksModel[]> {
+    return this.taskRepository.getAllTasks(filterDto, user);
   }
 
   async findById(id: string): Promise<TasksModel> {
