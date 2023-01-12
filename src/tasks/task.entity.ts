@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 import { UserEntity, UserInterface } from '../auth';
@@ -17,6 +18,7 @@ export class TaskEntity implements TasksModel {
   @Column()
   status: TasksStatus;
 
+  @Exclude({ toPlainOnly: true })
   @ManyToOne((_type) => UserEntity, (user) => user.tasks, { eager: false })
   user: UserInterface;
 }
