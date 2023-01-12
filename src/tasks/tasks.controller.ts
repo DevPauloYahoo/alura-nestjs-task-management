@@ -66,7 +66,10 @@ export class TasksController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  removeTaskById(@Param('id') id: string): Promise<void> {
-    return this.tasksService.remove(id);
+  removeTaskById(
+    @Param('id') id: string,
+    @GetUserDecorator() user: UserInterface,
+  ): Promise<void> {
+    return this.tasksService.remove(id, user);
   }
 }

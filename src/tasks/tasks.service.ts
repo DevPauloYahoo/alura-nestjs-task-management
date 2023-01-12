@@ -41,8 +41,8 @@ export class TasksService {
     return await this.taskRepository.save(task);
   }
 
-  async remove(id: string): Promise<void> {
-    const result = await this.taskRepository.delete(id);
+  async remove(id: string, user: UserInterface): Promise<void> {
+    const result = await this.taskRepository.delete({ id, user });
 
     if (result.affected === 0) {
       throw new NotFoundException(`Tarefa não encontrada para o ID: ${id}`);
