@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+} from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 
 import { UserInterface } from '../auth';
@@ -8,6 +12,8 @@ import { TasksModel, TasksStatus } from './tasks.model';
 
 @Injectable()
 export class TasksRepository extends Repository<TaskEntity> {
+  private readonly logger = new Logger('TasksRepository', { timestamp: true });
+
   constructor(private datasource: DataSource) {
     super(TaskEntity, datasource.createEntityManager());
   }
@@ -50,6 +56,14 @@ export class TasksRepository extends Repository<TaskEntity> {
       );
     }
 
-    return await query.getMany();
+    try {
+      return await query.getMany();
+    } catch (err) {
+      this.logger.error(
+        `Erro ao buscar tarefas para o Usuário (${user.username})`,
+        err.message,
+      );
+      throw new InternalServerErrorException('Erro ao buscar dados');
+    }
   }
 }

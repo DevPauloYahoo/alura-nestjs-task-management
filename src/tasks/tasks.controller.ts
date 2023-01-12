@@ -6,6 +6,7 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Logger,
   Param,
   Patch,
   Post,
@@ -28,6 +29,8 @@ import { TasksService } from './tasks.service';
 @Controller('api/tasks')
 @UseGuards(AuthGuard())
 export class TasksController {
+  private readonly logger = new Logger('TasksController', { timestamp: true });
+
   constructor(private readonly tasksService: TasksService) {}
 
   @Get()
@@ -35,6 +38,7 @@ export class TasksController {
     @Query() filterDto: GetTaskFilterDto,
     @GetUserDecorator() user: UserInterface,
   ): Promise<TasksModel[]> {
+    this.logger.verbose(`Usuário (${user.username}) buscando todas as tarefas`);
     return this.tasksService.getTasks(filterDto, user);
   }
 
@@ -43,6 +47,7 @@ export class TasksController {
     @Param('id') id: string,
     @GetUserDecorator() user: UserInterface,
   ): Promise<TasksModel> {
+    this.logger.verbose(`Usuário (${user.username}) buscando uma tarefa`);
     return this.tasksService.findById(id, user);
   }
 
@@ -52,6 +57,7 @@ export class TasksController {
     @Body() createReqTaskDto: CreateReqTaskDto,
     @GetUserDecorator() user: UserInterface,
   ): Promise<TasksModel> {
+    this.logger.verbose(`Usuário (${user.username}) criou uma tarefa`);
     return this.tasksService.create(createReqTaskDto, user);
   }
 

@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
@@ -9,6 +9,8 @@ import { UsersRepository } from '../users.repository';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
+  private readonly logger = new Logger('TasksRepository');
+
   constructor(
     private readonly usersRepository: UsersRepository,
     private readonly configService: ConfigService,
@@ -25,6 +27,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
 
     if (!user) {
+      this.logger.error(`Acesso negado ao Usuário (${username})`);
       throw new UnauthorizedException('Usuário não autorizado');
     }
 
