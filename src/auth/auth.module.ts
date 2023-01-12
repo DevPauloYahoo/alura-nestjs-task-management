@@ -24,11 +24,7 @@ import { UsersRepository } from './users.repository';
     }),
     TypeOrmModule.forFeature([UserEntity]),
   ],
-  providers: [
-    AuthService,
-    UsersRepository,
-    JwtStrategy,
-  ],
+  providers: [AuthService, UsersRepository, JwtStrategy],
   controllers: [AuthController],
   exports: [PassportModule, JwtStrategy],
 })

@@ -11,19 +11,11 @@ import { UserEntity } from './user.entity';
 
 @Injectable()
 export class UsersRepository extends Repository<UserEntity> {
-  constructor(
-    private readonly datasource: DataSource,
-  ) {
-    super(
-      UserEntity,
-      datasource.createEntityManager(),
-    );
+  constructor(private readonly datasource: DataSource) {
+    super(UserEntity, datasource.createEntityManager());
   }
 
-  async createUser({
-    username,
-    password,
-  }: SignUpRequestDto): Promise<void> {
+  async createUser({ username, password }: SignUpRequestDto): Promise<void> {
     const salt = genSaltSync(10);
     password = hashSync(password, salt);
 
@@ -40,9 +32,7 @@ export class UsersRepository extends Repository<UserEntity> {
           'Nome de usuário já usado em outro cadastro',
         );
       }
-      throw new InternalServerErrorException(
-        err.message,
-      );
+      throw new InternalServerErrorException(err.message);
     }
   }
 }

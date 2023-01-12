@@ -1,8 +1,4 @@
-import {
-  IsEnum,
-  IsNotEmpty,
-  IsOptional,
-} from 'class-validator';
+import { IsEnum, IsNotEmpty, IsOptional } from 'class-validator';
 
 import { TasksStatus } from '../tasks.model';
 
@@ -25,8 +21,7 @@ export class CreateRespTaskDto {
 
 export class UpdateTaskStatusDto {
   @IsEnum(TasksStatus, {
-    message:
-      'O valor do Status informado é inválido',
+    message: 'O valor do Status informado é inválido',
   })
   status: TasksStatus;
 }
