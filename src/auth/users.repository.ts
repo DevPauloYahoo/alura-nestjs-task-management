@@ -1,4 +1,8 @@
-import { ConflictException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { genSaltSync, hashSync } from 'bcrypt';
 import { DataSource, Repository } from 'typeorm';
 
@@ -7,11 +11,19 @@ import { UserEntity } from './user.entity';
 
 @Injectable()
 export class UsersRepository extends Repository<UserEntity> {
-  constructor(private readonly datasource: DataSource) {
-    super(UserEntity, datasource.createEntityManager());
+  constructor(
+    private readonly datasource: DataSource,
+  ) {
+    super(
+      UserEntity,
+      datasource.createEntityManager(),
+    );
   }
 
-  async createUser({ username, password }: SignUpRequestDto): Promise<void> {
+  async createUser({
+    username,
+    password,
+  }: SignUpRequestDto): Promise<void> {
     const salt = genSaltSync(10);
     password = hashSync(password, salt);
 
@@ -24,9 +36,13 @@ export class UsersRepository extends Repository<UserEntity> {
       await this.save(newUser);
     } catch (err) {
       if (err.code === '23505') {
-        throw new ConflictException('Nome de usuário já usado em outro cadastro');
+        throw new ConflictException(
+          'Nome de usuário já usado em outro cadastro',
+        );
       }
-      throw new InternalServerErrorException(err.message);
+      throw new InternalServerErrorException(
+        err.message,
+      );
     }
   }
 }

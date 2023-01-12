@@ -1,8 +1,19 @@
-import { Exclude } from 'class-transformer';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Transform } from 'class-transformer';
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
-import { UserEntity, UserInterface } from '../auth';
-import { TasksModel, TasksStatus } from './tasks.model';
+import {
+  UserEntity,
+  UserInterface,
+} from '../auth';
+import {
+  TasksModel,
+  TasksStatus,
+} from './tasks.model';
 
 @Entity()
 export class TaskEntity implements TasksModel {
@@ -18,7 +29,12 @@ export class TaskEntity implements TasksModel {
   @Column()
   status: TasksStatus;
 
-  @Exclude({ toPlainOnly: true })
-  @ManyToOne((_type) => UserEntity, (user) => user.tasks, { eager: false })
+  // @Exclude({ toPlainOnly: true })
+  @Transform(({ value }) => value.id)
+  @ManyToOne(
+    (_type) => UserEntity,
+    (user) => user.tasks,
+    { eager: false },
+  )
   user: UserInterface;
 }

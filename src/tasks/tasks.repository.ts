@@ -2,14 +2,23 @@ import { Injectable } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 
 import { UserInterface } from '../auth';
-import { CreateReqTaskDto, GetTaskFilterDto } from './dtos';
+import {
+  CreateReqTaskDto,
+  GetTaskFilterDto,
+} from './dtos';
 import { TaskEntity } from './task.entity';
-import { TasksModel, TasksStatus } from './tasks.model';
+import {
+  TasksModel,
+  TasksStatus,
+} from './tasks.model';
 
 @Injectable()
 export class TasksRepository extends Repository<TaskEntity> {
   constructor(private datasource: DataSource) {
-    super(TaskEntity, datasource.createEntityManager());
+    super(
+      TaskEntity,
+      datasource.createEntityManager(),
+    );
   }
 
   async createTask(
