@@ -4,7 +4,9 @@ import { UserInterface } from '../user.entity';
 
 export const GetUserDecorator = createParamDecorator(
   (_data, ctx: ExecutionContext): UserInterface => {
-    const req = ctx.switchToHttp().getRequest();
-    return req.user;
+    const { user } = ctx.switchToHttp().getRequest();
+    return user;
+    // const req = ctx.switchToHttp().getRequest();
+    // return req.user;
   },
 );
