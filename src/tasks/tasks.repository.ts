@@ -41,9 +41,9 @@ export class TasksRepository extends Repository<TaskEntity> {
 
     if (search) {
       query.andWhere(
-        `LOWER(task.description) LIKE LOWER(:search) 
+        `(LOWER(task.description) LIKE LOWER(:search) 
                OR 
-               LOWER(task.title) LIKE LOWER(:search)`,
+               LOWER(task.title) LIKE LOWER(:search))`,
         {
           search: `%${search}%`,
         },
