@@ -1,4 +1,5 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { IPaginationOptions, Pagination } from 'nestjs-typeorm-paginate';
 
 import { UserInterface } from '../auth';
 import { CreateReqTaskDto, GetTaskFilterDto } from './dtos';
@@ -7,16 +8,22 @@ import { TasksRepository } from './tasks.repository';
 
 @Injectable()
 export class TasksService {
+  private readonly logger = new Logger('TasksService', { timestamp: true });
+
   constructor(private readonly taskRepository: TasksRepository) {}
 
   getTasks(
     filterDto: GetTaskFilterDto,
     user: UserInterface,
-  ): Promise<TasksModel[]> {
-    return this.taskRepository.getAllTasks(filterDto, user);
+    options: IPaginationOptions,
+  ): Promise<Pagination<TasksModel>> {
+    this.logger.verbose(`Usuário (${user.username}) buscando todas as tarefas`);
+    return this.taskRepository.getAllTasks(filterDto, options, user);
   }
 
   async findById(id: string, user: UserInterface): Promise<TasksModel> {
+    this.logger.verbose(`Usuário (${user.username}) buscando uma tarefa`);
+
     try {
       return await this.taskRepository.findOneByOrFail({ id, user });
     } catch (e) {
@@ -28,6 +35,7 @@ export class TasksService {
     createReqTaskDto: CreateReqTaskDto,
     user: UserInterface,
   ): Promise<TasksModel> {
+    this.logger.verbose(`Usuário (${user.username}) criou uma tarefa`);
     return this.taskRepository.createTask(createReqTaskDto, user);
   }
 

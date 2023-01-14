@@ -3,8 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
-import { JwtPayloadInterface } from '../jwt-payload.interface';
-import { UserInterface } from '../user.entity';
+import { JwtPayloadInterface, UserInterface } from '../interfaces';
 import { UsersRepository } from '../users.repository';
 
 @Injectable()
@@ -22,7 +21,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate({ username }: JwtPayloadInterface): Promise<UserInterface> {
-    const user = this.usersRepository.findOneBy({
+    const user = await this.usersRepository.findOneBy({
       username,
     });
 
@@ -31,6 +30,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       throw new UnauthorizedException('Usuário não autorizado');
     }
 
+    Reflect.deleteProperty(user, 'tasks');
     return user;
   }
 }

@@ -3,8 +3,8 @@ import { JwtService } from '@nestjs/jwt';
 import { compareSync } from 'bcrypt';
 
 import { SignInRequestDto, SignInResponseDto, SignUpRequestDto } from './dtos';
-import { JwtPayloadInterface } from './jwt-payload.interface';
-import { UserInterface } from './user.entity';
+import { UserInterface } from './interfaces';
+import { JwtPayloadInterface } from './interfaces/jwt-payload.interface';
 import { UsersRepository } from './users.repository';
 
 @Injectable()

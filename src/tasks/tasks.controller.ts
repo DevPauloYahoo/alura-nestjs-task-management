@@ -2,11 +2,11 @@ import {
   Body,
   ClassSerializerInterceptor,
   Controller,
+  DefaultValuePipe,
   Delete,
   Get,
   HttpCode,
   HttpStatus,
-  Logger,
   Param,
   Patch,
   Post,
@@ -15,49 +15,65 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-
-import { UserInterface } from '../auth';
-import { GetUserDecorator } from '../auth/decorators/get-user.decorator';
 import {
-  CreateReqTaskDto,
-  GetTaskFilterDto,
-  UpdateTaskStatusDto,
-} from './dtos';
-import { TasksModel } from './tasks.model';
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
+import { Pagination } from 'nestjs-typeorm-paginate';
+
+import { GetUserDecorator, UserInterface } from '../auth';
+import { CreateReqTaskDto, ResponseTaskDto, UpdateTaskStatusDto } from './dtos';
+import { TasksStatus } from './tasks.model';
 import { TasksService } from './tasks.service';
 
+@ApiTags('tasks')
+@ApiBearerAuth('access_token')
 @Controller('api/tasks')
 @UseGuards(AuthGuard())
 export class TasksController {
-  private readonly logger = new Logger('TasksController', { timestamp: true });
-
   constructor(private readonly tasksService: TasksService) {}
 
   @Get()
+  @ApiQuery({ name: 'page', required: false })
+  @ApiQuery({ name: 'limit', required: false })
+  @ApiQuery({ name: 'search', required: false })
+  @ApiQuery({ name: 'status', enum: TasksStatus, required: false })
+  @ApiOkResponse({ type: ResponseTaskDto, isArray: true })
   getAllTasks(
-    @Query() filterDto: GetTaskFilterDto,
+    @Query('page', new DefaultValuePipe(1)) page: number,
+    @Query('limit', new DefaultValuePipe(10)) limit: number,
+    @Query('search') search: string,
+    @Query('status') status: TasksStatus,
     @GetUserDecorator() user: UserInterface,
-  ): Promise<TasksModel[]> {
-    this.logger.verbose(`Usuário (${user.username}) buscando todas as tarefas`);
-    return this.tasksService.getTasks(filterDto, user);
+  ): Promise<Pagination<ResponseTaskDto>> {
+    console.log(user);
+    return this.tasksService.getTasks({ search, status }, user, {
+      page,
+      limit,
+    });
   }
 
   @Get(':id')
+  @ApiOkResponse({ type: ResponseTaskDto })
+  @ApiNotFoundResponse()
   getTaskById(
     @Param('id') id: string,
     @GetUserDecorator() user: UserInterface,
-  ): Promise<TasksModel> {
-    this.logger.verbose(`Usuário (${user.username}) buscando uma tarefa`);
+  ): Promise<ResponseTaskDto> {
     return this.tasksService.findById(id, user);
   }
 
-  @UseInterceptors(ClassSerializerInterceptor)
   @Post()
+  @ApiCreatedResponse({ type: ResponseTaskDto })
+  @UseInterceptors(ClassSerializerInterceptor)
   createTask(
     @Body() createReqTaskDto: CreateReqTaskDto,
     @GetUserDecorator() user: UserInterface,
-  ): Promise<TasksModel> {
-    this.logger.verbose(`Usuário (${user.username}) criou uma tarefa`);
+  ): Promise<ResponseTaskDto> {
     return this.tasksService.create(createReqTaskDto, user);
   }
 
@@ -66,7 +82,7 @@ export class TasksController {
     @Param('id') id: string,
     @Body() { status }: UpdateTaskStatusDto,
     @GetUserDecorator() user: UserInterface,
-  ): Promise<TasksModel> {
+  ): Promise<ResponseTaskDto> {
     return this.tasksService.updateStatus(id, status, user);
   }
 

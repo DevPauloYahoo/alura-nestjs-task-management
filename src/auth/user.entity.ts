@@ -1,7 +1,7 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
-import { TasksModel } from '../tasks';
-import { TaskEntity } from '../tasks/task.entity';
+import { TaskEntity, TasksModel } from '../tasks';
+import { UserInterface } from './interfaces';
 
 @Entity()
 export class UserEntity implements UserInterface {
@@ -15,12 +15,5 @@ export class UserEntity implements UserInterface {
   password: string;
 
   @OneToMany((_type) => TaskEntity, (task) => task.user, { eager: true })
-  tasks: TasksModel[];
-}
-
-export interface UserInterface {
-  id: string;
-  username: string;
-  password: string;
   tasks: TasksModel[];
 }

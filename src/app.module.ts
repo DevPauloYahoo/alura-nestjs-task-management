@@ -4,7 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { AuthModule } from './auth';
 import { CONFIG_VALIDATION_SCHEMA } from './helpers';
-import { TasksModule } from './tasks';
+import { TasksModule } from './tasks/tasks.module';
 
 @Module({
   imports: [

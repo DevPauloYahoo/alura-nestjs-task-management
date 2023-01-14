@@ -3,7 +3,7 @@ import { NestFactory } from '@nestjs/core';
 import { SwaggerModule } from '@nestjs/swagger';
 
 import { AppModule } from './app.module';
-import { configSwagger } from './helpers/swagger.config';
+import { configSwagger } from './helpers';
 
 async function bootstrap() {
   const logger = new Logger();
@@ -14,6 +14,9 @@ async function bootstrap() {
       forbidNonWhitelisted: true,
     }),
   );
+  // swagger
+  const document = SwaggerModule.createDocument(app, configSwagger);
+  SwaggerModule.setup('/', app, document);
 
   /* app.useGlobalInterceptors(
   new TransformInterceptor(),
@@ -21,10 +24,6 @@ async function bootstrap() {
   const port = 3000;
   await app.listen(port);
   logger.log(`Aplicação disponível na porta ${port}`);
-
-  // swagger
-  const document = SwaggerModule.createDocument(app, configSwagger);
-  SwaggerModule.setup('/', app, document);
 }
 
 bootstrap();

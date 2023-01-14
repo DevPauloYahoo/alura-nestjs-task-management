@@ -1,7 +1,8 @@
 import { Transform } from 'class-transformer';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
-import { UserEntity, UserInterface } from '../auth';
+import { UserEntity } from '../auth';
+import { UserInterface } from '../auth/interfaces';
 import { TasksModel, TasksStatus } from './tasks.model';
 
 @Entity()

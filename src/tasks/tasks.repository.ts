@@ -3,6 +3,11 @@ import {
   InternalServerErrorException,
   Logger,
 } from '@nestjs/common';
+import {
+  IPaginationOptions,
+  paginate,
+  Pagination,
+} from 'nestjs-typeorm-paginate';
 import { DataSource, Repository } from 'typeorm';
 
 import { UserInterface } from '../auth';
@@ -33,11 +38,13 @@ export class TasksRepository extends Repository<TaskEntity> {
 
   async getAllTasks(
     { search, status }: GetTaskFilterDto,
+    options: IPaginationOptions,
     user: UserInterface,
-  ): Promise<TasksModel[]> {
+  ): Promise<Pagination<TasksModel>> {
     const query = this.createQueryBuilder('task');
 
     query.where({ user });
+    query.orderBy('task.title', 'DESC');
 
     if (status) {
       query.andWhere('task.status = :status', {
@@ -57,7 +64,7 @@ export class TasksRepository extends Repository<TaskEntity> {
     }
 
     try {
-      return await query.getMany();
+      return await paginate<TasksModel>(query, options);
     } catch (err) {
       this.logger.error(
         `Erro ao buscar tarefas para o Usuário (${user.username})`,

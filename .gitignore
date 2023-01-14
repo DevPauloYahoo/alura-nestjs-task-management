@@ -3,9 +3,9 @@
 /node_modules
 
 # enviroments variables
-.env
-.env.profile.dev
-.env.profile.prod
+/.env
+/.env.profile.dev
+/.env.profile.prod
 
 # Logs
 logs
